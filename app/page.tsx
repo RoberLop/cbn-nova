@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export default function Page() {
   return (
@@ -32,13 +33,18 @@ export default function Page() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 bg-[#dca54c] text-white px-4 py-2 text-sm rounded hover:bg-[#c08f3f] transition">
-            <span className="border border-white rounded px-1">+</span>
+          <button className="hidden md:flex items-center gap-2 border border-[#dca54c] text-[#dca54c] px-4 py-2 text-sm rounded-lg hover:bg-[#dca54c] hover:text-[#0b1320] transition">
+            <span className="border border-current rounded px-1">+</span>
             Publica tu propiedad
           </button>
-          <div className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-          </div>
+          
+          {/* AQUÍ ESTÁ LA PUERTA: El botón de Iniciar Sesión conectado */}
+          <Link 
+            href="/login" 
+            className="bg-[#dca54c] hover:bg-[#c59340] text-[#0b1320] px-5 py-2 text-sm rounded-lg font-bold transition duration-200"
+          >
+            Iniciar Sesión
+          </Link>
         </div>
       </header>
 
@@ -88,7 +94,7 @@ export default function Page() {
             <p className="text-xs text-gray-400 mb-1">Rango de precio</p>
             <div className="flex justify-between items-center text-sm font-medium">
               <span>Cualquier precio</span>
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08-.402-2.599-1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
           </div>
           <div className="px-3">
