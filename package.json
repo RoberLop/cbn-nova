@@ -9,7 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@supabase/supabase-js": "^2.110.8",
+=======
+    "@supabase/supabase-js": "^2.111.0",
+>>>>>>> e7b54760bcd57df971f1ae285578e449b7d23c35
     "next": "16.2.11",
     "react": "19.2.4",
     "react-dom": "19.2.4"
