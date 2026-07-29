@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+// AQUÍ ESTÁ EL PUENTE: Mandamos llamar a tu archivo de conexión
+import { supabase } from "../../lib/supabase"; 
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   
-  // Estados para los campos
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -14,44 +15,77 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   
-  // Estados para UI y validaciones
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Validadores en tiempo real
   const hasUpperCase = /[A-Z]/.test(password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
   const isPasswordValid = hasUpperCase && hasSpecialChar && password.length >= 8;
   const passwordsMatch = password === confirmPassword;
 
+  // ESTA ES LA FUNCIÓN QUE HACE LA MAGIA CON LA BASE DE DATOS
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!isLogin && (!isPasswordValid || !passwordsMatch)) {
       alert("Por favor, corrige los errores en la contraseña antes de continuar.");
       return;
     }
-    console.log(isLogin ? "Iniciando sesión..." : "Registrando...", { email, password, rememberMe });
-    alert(isLogin ? "¡Simulando inicio de sesión exitoso!" : "¡Simulando registro! Te enviaríamos un correo de verificación.");
+
+    if (!isLogin) {
+      // 🚀 REGISTRO REAL EN SUPABASE
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            phone: phone,
+          }
+        }
+      });
+
+      if (error) {
+        alert("Error al registrar: " + error.message);
+      } else {
+        alert("¡Registro exitoso! Ya estás en la base de datos de NOVA.");
+        // Limpiar el formulario después de registrar
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setFirstName("");
+        setLastName("");
+        setPhone("");
+        setIsLogin(true); // Lo mandamos a la pantalla de iniciar sesión
+      }
+      
+    } else {
+      // 🔑 INICIO DE SESIÓN REAL EN SUPABASE
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+
+      if (error) {
+        alert("Error al iniciar sesión. Revisa tu correo y contraseña.");
+      } else {
+        alert("¡Bienvenido de vuelta a NOVA!");
+        // En el futuro, aquí pondremos el código para mandarlo a su perfil
+      }
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0b1320] text-gray-200">
       
-      {/* Botón de regreso: pegado arriba para no robar espacio */}
       <div className="pt-4 px-4 sm:px-6">
         <Link href="/" className="text-xs text-gray-400 hover:text-[#dca54c] flex items-center gap-2 transition w-fit">
           <span>←</span> Volver
         </Link>
       </div>
 
-      {/* Contenedor Principal: Se adapta a celular (flex-col), laptop (centrado) y monitor */}
       <div className="flex-1 flex items-center justify-center px-4 py-4 w-full">
-        
-        {/* MAGIA AQUÍ: 
-            Celular (base): 1 columna, max-w-md, p-5.
-            Laptop (sm): 2 columnas, max-w-2xl, p-6.
-            Monitor Gigante (2xl): Crece a max-w-4xl, p-8. 
-        */}
         <div className={`w-full bg-gray-900 rounded-xl shadow-2xl p-5 sm:p-6 2xl:p-10 border border-gray-800 transition-all duration-300 ${isLogin ? 'max-w-md 2xl:max-w-lg' : 'max-w-md sm:max-w-2xl 2xl:max-w-4xl'}`}>
           
           <div className="text-center mb-4 2xl:mb-8">
@@ -65,7 +99,6 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-3 2xl:space-y-6">
             
-            {/* VISTA DE REGISTRO */}
             {!isLogin && (
               <>
                 <div className="flex flex-col sm:flex-row gap-3 2xl:gap-6">
@@ -129,7 +162,6 @@ export default function LoginPage() {
               </>
             )}
 
-            {/* VISTA DE LOGIN */}
             {isLogin && (
               <>
                 <div>
